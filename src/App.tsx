@@ -1,9 +1,14 @@
-import './App.css';
+import { Toaster } from 'sonner';
+import AppRoutes from './routes/routes';
+import { BrowserRouter } from 'react-router';
 
 function App() {
   return (
     <div>
-      <h5>Credrails Assessment</h5>
+      <Toaster />
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </div>
   );
 }
