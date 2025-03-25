@@ -22,22 +22,22 @@ export const AuthProviderContainer: FC<Props> = ({ children }) => {
 
   const updateUser = (value: User) => {
     setUser(value);
-    secureStorage.storeItem(Constants.user, JSON.stringify(value));
+    secureStorage.storeItem(Constants.currentUser, JSON.stringify(value));
   };
 
   const logout = () => {
     setUser(null);
-    secureStorage.removeItem(Constants.user);
+    secureStorage.removeItem(Constants.currentUser);
   };
 
   useEffect(() => {
-    const storedUser = secureStorage.getItem(Constants.user);
+    const storedUser = secureStorage.getItem(Constants.currentUser);
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error('Failed to parse stored user:', error);
-        secureStorage.removeItem(Constants.user);
+        secureStorage.removeItem(Constants.currentUser);
       }
     }
   }, []);

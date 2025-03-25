@@ -1,19 +1,17 @@
+import axios from '@/lib/api/auth';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
-import { registerUser } from '@/lib/api/auth';
 import { Register as RegisterInterface } from '@/lib/interface/auth';
 import { registerSchema } from '@/lib/schemas/auth';
 import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeIcon, Loader2 } from 'lucide-react';
-import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 const Register = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const formMethods = useForm<RegisterInterface>({
@@ -34,18 +32,19 @@ const Register = () => {
     formState: { errors, isSubmitting },
   } = formMethods;
 
+
   const onSubmit = async (values: RegisterInterface) => {
-    setIsLoading(true);
     try {
-      await registerUser(values);
-      toast.success('Registration successful');
-      navigate('/auth/login');
-    } catch (error) {
+      const response = await axios.post('/api/register', values);
+      if (response) {
+        toast.success('Registration successful');
+        navigate('/auth/login');
+      }
+    } catch (error: any) {
       toast.error('Registration failed, Please try again');
-    } finally {
-      setIsLoading(false);
     }
   };
+
 
   return (
     <>
@@ -142,9 +141,9 @@ const Register = () => {
             <Button
               className="w-full mt-6"
               type="submit"
-              disabled={isLoading || isSubmitting}
+              disabled={isSubmitting}
             >
-              {(isLoading || isSubmitting) && (
+              {isSubmitting && (
                 <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
               )}
               Register

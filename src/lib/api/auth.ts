@@ -1,24 +1,39 @@
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { SecureStorage } from '@/utils/storage';
+import { Constants } from '@/utils/constants';
 import { simulateDelay } from '@/utils/simulateDelay';
 import { v4 as uuidv4 } from 'uuid';
 import { Login, Register } from '../interface/auth';
+import { User } from '../interface/user';
 
-const users: Record<string, any> = {};
+const secureStorage = new SecureStorage();
+const mock = new MockAdapter(axios);
 
-export const registerUser = async (userData: Register) => {
+const getCurrentUser = (): User | null => {
+  const user = secureStorage.getItem(Constants.currentUser);
+  return user ? JSON.parse(user) : null;
+};
+
+const saveCurrentUser = (user: User | null) => {
+  if (user) {
+    secureStorage.storeItem(Constants.currentUser, JSON.stringify(user));
+  } else {
+    secureStorage.removeItem(Constants.currentUser);
+  }
+};
+
+mock.onPost('/api/register').reply(async (config) => {
   await simulateDelay(1000);
+  const userData: Register = JSON.parse(config.data);
+  const currentUser = getCurrentUser();
 
-  const existingUser = Object.values(users).find(
-    (user: any) => user.email === userData.email
-  );
-
-  if (existingUser) {
-    throw new Error('Email already in use');
+  if (currentUser && currentUser.email === userData.email) {
+    return [400, { error: 'Email already in use' }];
   }
 
-  const userId = uuidv4();
-
-  const newUser = {
-    id: userId,
+  const newUser: User = {
+    id: uuidv4(),
     firstName: userData.firstName,
     lastName: userData.lastName,
     email: userData.email,
@@ -26,24 +41,27 @@ export const registerUser = async (userData: Register) => {
     password: userData.password,
   };
 
-  users[userId] = newUser;
+  saveCurrentUser(newUser);
 
   const { password, ...userWithoutPassword } = newUser;
-  return userWithoutPassword;
-};
+  return [201, userWithoutPassword];
+});
 
-export const loginUser = async (userData: Login) => {
+mock.onPost('/api/login').reply(async (config) => {
   await simulateDelay(800);
+  const loginData: Login = JSON.parse(config.data);
+  const currentUser = getCurrentUser();
 
-  const user = Object.values(users).find(
-    (user: Login) =>
-      user.email === userData.email && user.password === userData.password
-  );
-
-  if (!user) {
-    throw new Error('Invalid credentials');
+  if (
+    !currentUser ||
+    currentUser.email !== loginData.email ||
+    currentUser.password !== loginData.password
+  ) {
+    return [401, { error: 'Invalid credentials' }];
   }
 
-  const { password: _, ...userWithoutPassword } = user;
-  return userWithoutPassword;
-};
+  const { password, ...userWithoutPassword } = currentUser;
+  return [200, userWithoutPassword];
+});
+
+export default axios;

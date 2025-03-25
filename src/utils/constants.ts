@@ -1,3 +1,3 @@
 export const Constants = {
-  user: 'user',
+  currentUser: 'currentUser',
 };

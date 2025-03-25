@@ -1,12 +1,12 @@
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
-import { loginUser } from '@/lib/api/auth';
 import AuthContext from '@/lib/context/authContext';
 import { Login as LoginInterface } from '@/lib/interface/auth';
 import { loginSchema } from '@/lib/schemas/auth';
 import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from '@/lib/api/auth';
 import { EyeIcon, Loader2 } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -14,7 +14,6 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const { updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -34,16 +33,15 @@ const Login = () => {
   } = formMethods;
 
   const onSubmit = async (values: LoginInterface) => {
-    setIsLoading(true);
     try {
-      const user = await loginUser(values);
-      updateUser(user);
-      toast.success('Login successful');
-      navigate('/main/dashboard');
-    } catch (error) {
-      toast.error('Invalid credentials. Please try again.');
-    } finally {
-      setIsLoading(false);
+      const response = await axios.post('/api/login', values);
+      if (response) {
+        updateUser(response.data)
+        toast.success('Registration successful');
+        navigate('/auth/login');
+      }
+    } catch (error: any) {
+      toast.error('Invalid credentials, Please try again');
     }
   };
 
@@ -90,9 +88,9 @@ const Login = () => {
             <Button
               className="w-full mt-6"
               type="submit"
-              disabled={isLoading || isSubmitting}
+              disabled={isSubmitting}
             >
-              {(isLoading || isSubmitting) && (
+              {isSubmitting && (
                 <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
               )}
               Login
