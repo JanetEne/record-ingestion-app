@@ -4,8 +4,8 @@ import { Link } from 'react-router';
 const Dashboard = () => {
   return (
     <div className="flex justify-center items-center flex-col h-full">
-      <h5 className="text-4xl font-medium mb-8">Welcome Janet,</h5>
-      <p className="text-[#344054] text-base font-normal">
+      <h5 className="text-5xl font-semibold mb-6">Welcome Janet,</h5>
+      <p className="text-[#344054] text-xl font-normal">
         Upload CSV or XLSX files, process them, and view the details of the
         records
       </p>

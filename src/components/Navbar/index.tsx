@@ -2,6 +2,7 @@ import CredrailsLogo from '@/assets/images/credrails-logo.png';
 import { NavLink } from 'react-router';
 import Container from '../Container';
 import { Button } from '../Button';
+import { LogOutIcon } from 'lucide-react';
 
 const NavBar = () => {
   return (
@@ -11,15 +12,21 @@ const NavBar = () => {
           <NavLink to="/main/dashboard">
             <img src={CredrailsLogo} alt="credrails-logo" />
           </NavLink>
-          <div className="flex gap-8">
+          <div className="flex gap-4">
             <NavLink to="/main/uploads">
-              <p className="text-lg font-medium text-[#101828]">Uploads</p>
+              <Button variant={'ghost'}>Uploads</Button>
             </NavLink>
             <NavLink to="/main/details">
-              <p className="text-lg font-medium text-[#101828]">Details</p>
+              <Button variant={'ghost'}>Details</Button>
             </NavLink>
-
-            <Button>Logout</Button>
+            <NavLink to="/auth/login">
+              <Button className="!px-6 !py-2" variant={'calendar'}>
+                <span>
+                  <LogOutIcon />
+                </span>
+                Logout
+              </Button>
+            </NavLink>
           </div>
         </div>
       </Container>

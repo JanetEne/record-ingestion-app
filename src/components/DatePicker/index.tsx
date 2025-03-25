@@ -7,16 +7,16 @@ import { cn } from '@/utils/cn';
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Button } from '../Button';
 
-export function DatePickerDemo() {
+export function DatePicker() {
   const [date, setDate] = React.useState<Date>();
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={'outline'}
+          variant={'calendar'}
           className={cn(
-            'w-[280px] justify-start text-left font-normal',
+            'w-full justify-start text-left font-normal',
             !date && 'text-muted-foreground'
           )}
         >
