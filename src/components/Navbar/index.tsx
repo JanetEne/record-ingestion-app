@@ -1,10 +1,20 @@
 import CredrailsLogo from '@/assets/images/credrails-logo.png';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import Container from '../Container';
 import { Button } from '../Button';
 import { LogOutIcon } from 'lucide-react';
+import { useContext } from 'react';
+import AuthContext from '@/lib/context/authContext';
 
 const NavBar = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <nav className="sticky top-0 w-full bg-white py-4">
       <Container>
@@ -19,14 +29,16 @@ const NavBar = () => {
             <NavLink to="/main/details">
               <Button variant={'ghost'}>Details</Button>
             </NavLink>
-            <NavLink to="/auth/login">
-              <Button className="!px-6 !py-2" variant={'calendar'}>
-                <span>
-                  <LogOutIcon />
-                </span>
-                Logout
-              </Button>
-            </NavLink>
+            <Button
+              className="!px-6 !py-2"
+              variant={'calendar'}
+              onClick={handleLogout}
+            >
+              <span>
+                <LogOutIcon />
+              </span>
+              Logout
+            </Button>
           </div>
         </div>
       </Container>

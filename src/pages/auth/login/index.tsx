@@ -1,16 +1,23 @@
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
+import { loginUser } from '@/lib/api/auth';
+import AuthContext from '@/lib/context/authContext';
 import { Login as LoginInterface } from '@/lib/interface/auth';
 import { loginSchema } from '@/lib/schemas/auth';
+import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EyeIcon } from 'lucide-react';
-import { useState } from 'react';
-import { Form, useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { EyeIcon, Loader2 } from 'lucide-react';
+import { useContext, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const { updateUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const formMethods = useForm<LoginInterface>({
     resolver: zodResolver(loginSchema),
@@ -23,25 +30,35 @@ const Login = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = formMethods;
 
-  const onSubmit = (values: LoginInterface) => {
+  const onSubmit = async (values: LoginInterface) => {
     setIsLoading(true);
+    try {
+      const user = await loginUser(values);
+      updateUser(user);
+      toast.success('Login successful');
+      navigate('/main/dashboard');
+    } catch (error) {
+      toast.error('Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
       <h5 className="text-center font-medium text-2xl mb-10">Welcome Back!</h5>
       <Card>
-        <Form {...formMethods}>
+        <FormProvider {...formMethods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 relative">
               <p>Email</p>
               <Input
                 placeholder="Enter Email Address"
                 type="email"
-                {...(register('email'), { required: true })}
+                {...register('email')}
               />
               {errors && (
                 <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
@@ -50,13 +67,18 @@ const Login = () => {
               )}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 relative">
               <p>Password</p>
               <Input
                 placeholder="Enter Password"
-                type="password"
-                {...(register('password'), { required: true })}
-                trailing={<EyeIcon className="w-4 h-4" />}
+                type={showPassword ? 'text' : 'password'}
+                {...register('password')}
+                trailing={
+                  <EyeIcon
+                    className="w-4 h-4 cursor-pointer"
+                    onClick={() => setShowPassword(true)}
+                  />
+                }
               />
               {errors && (
                 <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
@@ -65,11 +87,18 @@ const Login = () => {
               )}
             </div>
 
-            <Button className="w-full mt-6" type="submit">
+            <Button
+              className="w-full mt-6"
+              type="submit"
+              disabled={isLoading || isSubmitting}
+            >
+              {(isLoading || isSubmitting) && (
+                <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
+              )}
               Login
             </Button>
           </form>
-        </Form>
+        </FormProvider>
 
         <p className="text-center mt-4 text-[#344054] text-sm">
           Don't have an account?{' '}

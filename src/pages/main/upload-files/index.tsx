@@ -15,17 +15,19 @@ const UploadFile = () => {
   return (
     <>
       <p className="text-xl font-medium mb-6">Upload File</p>
-      <div className="flex justify-center items-center flex-col h-full">
-        <Card className="max-w-xl w-full">
+      <div className="flex justify-center items-center flex-col">
+        <Card className="max-w-2xl w-full">
           <form>
-            <div className="flex flex-col gap-2 mb-4">
-              <p>Start Date</p>
-              <DatePicker />
-            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2 mb-4">
+                <p>Start Date</p>
+                <DatePicker />
+              </div>
 
-            <div className="flex flex-col gap-2 mb-4">
-              <p>End Date</p>
-              <DatePicker />
+              <div className="flex flex-col gap-2 mb-4">
+                <p>End Date</p>
+                <DatePicker />
+              </div>
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
@@ -36,13 +38,10 @@ const UploadFile = () => {
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   <SelectGroup>
-                    <SelectItem value="creationDate">Creation Date</SelectItem>
-                    <SelectItem value="modificationDate">
-                      Modification Date
-                    </SelectItem>
-                    <SelectItem value="publicationDate">
-                      Publication Date
-                    </SelectItem>
+                    <SelectItem value="1mon">1 month</SelectItem>
+                    <SelectItem value="2mon">3 months</SelectItem>
+                    <SelectItem value="3mon">6 months</SelectItem>
+                    <SelectItem value="12mon">1 year</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>

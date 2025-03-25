@@ -1,10 +1,16 @@
 import { Button } from '@/components/Button';
+import AuthContext from '@/lib/context/authContext';
+import { useContext } from 'react';
 import { Link } from 'react-router';
 
 const Dashboard = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="flex justify-center items-center flex-col h-full">
-      <h5 className="text-5xl font-semibold mb-6">Welcome Janet,</h5>
+      <h5 className="text-5xl font-semibold mb-6">
+        Welcome {user?.firstName} {user?.lastName},
+      </h5>
       <p className="text-[#344054] text-xl font-normal">
         Upload CSV or XLSX files, process them, and view the details of the
         records
