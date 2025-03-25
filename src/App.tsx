@@ -1,15 +1,16 @@
 import { Toaster } from 'sonner';
 import AppRoutes from './routes/routes';
 import { BrowserRouter } from 'react-router';
+import { AuthProviderContainer } from './lib/context/authContext';
 
 function App() {
   return (
-    <div>
+    <AuthProviderContainer>
       <Toaster />
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
-    </div>
+    </AuthProviderContainer>
   );
 }
 
