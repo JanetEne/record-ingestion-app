@@ -2,17 +2,18 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
-import { Calendar, Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Button } from '../Button';
+import { Calendar } from "../Calendar"
 
 export function DatePicker() {
   const [date, setDate] = React.useState<Date>();
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild className='bg-white'>
         <Button
           variant={'calendar'}
           className={cn(
