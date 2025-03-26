@@ -1,4 +1,5 @@
 import { Button } from '@/components/Button';
+import Pagination from '@/components/Pagination';
 import UploadsContext from '@/lib/context/uploadsContext';
 import { UploadResponse } from '@/lib/interface/upload';
 import { cn } from '@/utils/cn';
@@ -9,7 +10,9 @@ import { Link } from 'react-router';
 
 const Details = () => {
   const { uploads, updateUploads } = useContext(UploadsContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [size, setSize] = useState(10);
 
   const fetchUploads = async () => {
     try {
@@ -30,6 +33,12 @@ const Details = () => {
       fetchUploads();
     }
   }, []);
+
+  const totalRecords = uploads.length || 0;
+  const startIndex = (currentPage - 1) * size;
+  const endIndex = startIndex + size;
+  const paginatedUploads = uploads.slice(startIndex, endIndex);
+
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -68,14 +77,9 @@ const Details = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {uploads.length > 0 ?
-                    uploads.map((upload: UploadResponse, index) => (
-                      <tr key={upload.id} className={cn('cursor-pointer', {
-                        'border-b border-gray-200':
-                          uploads.length > 1 &&
-                          index < uploads.length - 1,
-                      })}>
-
+                  {paginatedUploads.length > 0 ?
+                    paginatedUploads.map((upload: UploadResponse) => (
+                      <tr key={upload.id} className={cn('cursor-pointer border-b border-gray-200')}>
                         <td className="text-sm p-4 whitespace-nowrap">
                           {upload.fileName}
                         </td>
@@ -103,7 +107,7 @@ const Details = () => {
                         <td className="text-sm p-4 whitespace-nowrap">
                           {upload.numOfRecords}
                         </td>
-                        <td className="text-sm p-4 text-[#4f54f8] whitespace-nowrap">
+                        <td className="text-sm p-4 font-medium text-[#4f54f8] whitespace-nowrap">
                           <Link to={`/main/details/${upload.id}`}>View content</Link>
                         </td>
                       </tr>
@@ -113,7 +117,7 @@ const Details = () => {
                         <div className='flex flex-col gap-4 w-full justify-center items-center'>
                           <p className='text-base font-medium'>No Records have been added yet.</p>
                           <Link to='/main/uploads'>
-                          <Button className='px-8'>Upload Files</Button>
+                            <Button className='px-8'>Upload Files</Button>
                           </Link>
                         </div>
                       </td>
@@ -123,6 +127,16 @@ const Details = () => {
             </div>
           </div>
         </div>
+
+        {totalRecords > 0 && (
+          <Pagination
+            totalItems={totalRecords}
+            itemsPerPage={size}
+            setPage={setCurrentPage}
+            page={currentPage}
+            setSize={setSize}
+          />
+        )}
       </div>
     </div>
 

@@ -1,3 +1,4 @@
+import Pagination from "@/components/Pagination";
 import UploadsContext from "@/lib/context/uploadsContext";
 import { UploadResponse } from "@/lib/interface/upload";
 import { cn } from "@/utils/cn";
@@ -11,6 +12,9 @@ const RecordContent = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [upload, setUpload] = useState<UploadResponse | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [size, setSize] = useState(10);
+
   const { uploads } = useContext(UploadsContext);
 
   const fetchUploadDetails = async () => {
@@ -30,6 +34,11 @@ const RecordContent = () => {
   useEffect(() => {
     fetchUploadDetails();
   }, [id, uploads]);
+
+  const totalRecords = upload?.processedFile?.length || 0;
+  const startIndex = (currentPage - 1) * size;
+  const endIndex = startIndex + size;
+  const paginatedData = upload?.processedFile?.slice(startIndex, endIndex) || [];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -67,12 +76,8 @@ const RecordContent = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {upload.processedFile.slice(0, 10).map((row, index) => (
-                      <tr key={index} className={cn('cursor-pointer', {
-                        'border-b border-gray-200':
-                          upload.processedFile.slice(0, 10).length > 1 &&
-                          index < upload.processedFile.slice(0, 10).length - 1,
-                      })}>
+                    {paginatedData.map((row, index) => (
+                      <tr key={index} className={cn('cursor-pointer border-b border-gray-200')}>
                         {Object.values(row).map((value, rowIndex) => (
                           <td
                             key={rowIndex}
@@ -88,6 +93,16 @@ const RecordContent = () => {
               </div>
             </div>
           </div>
+
+          {totalRecords > 0 && (
+            <Pagination
+              totalItems={totalRecords}
+              itemsPerPage={size}
+              setPage={setCurrentPage}
+              page={currentPage}
+              setSize={setSize}
+            />
+          )}
         </div>
       ) : (
         <div>No processed data available</div>
