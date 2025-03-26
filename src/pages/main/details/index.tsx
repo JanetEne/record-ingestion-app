@@ -2,12 +2,38 @@ import { Button } from '@/components/Button';
 import UploadsContext from '@/lib/context/uploadsContext';
 import { UploadResponse } from '@/lib/interface/upload';
 import { cn } from '@/utils/cn';
+import axios from 'axios';
 import { format } from 'date-fns';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
 const Details = () => {
-  const { uploads } = useContext(UploadsContext);
+  const { uploads, updateUploads } = useContext(UploadsContext);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchUploads = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('/api/uploads');
+      if (response) {
+        updateUploads(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch uploads:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (uploads.length === 0) {
+      fetchUploads();
+    }
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-full">
@@ -36,11 +62,7 @@ const Details = () => {
                       Date Type
                     </th>
                     <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
-                      Number of Records Processed
-                    </th>
-
-                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
-                      More
+                      Number of Records
                     </th>
                     <th className="text-sm font-medium text-left p-4 whitespace-nowrap"></th>
                   </tr>
@@ -80,7 +102,9 @@ const Details = () => {
                         </td>
                         <td className="text-sm p-4 whitespace-nowrap">
                           {upload.numOfRecords}
-
+                        </td>
+                        <td className="text-sm p-4 text-[#4f54f8] whitespace-nowrap">
+                          <Link to={`/main/details/${upload.id}`}>View content</Link>
                         </td>
                       </tr>
                     ))

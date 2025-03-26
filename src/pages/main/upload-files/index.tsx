@@ -92,13 +92,13 @@ const UploadFile = () => {
       if (response) {
         addUpload(response.data.data);
         toast.success(response.data.message);
-        setProcessingSteps([...processingSteps, 'Your file has been uploaded and processed successfully.']);
+        setProcessingSteps([...processingSteps, 'Upload completed successfully!']);
         setProgress(100);
         reset();
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.error || 'Failed to upload, please try again');
-      setProcessingSteps([...processingSteps, 'Error during processing']);
+      setProcessingSteps([...processingSteps, 'An Error occured while processing file']);
     } finally {
       setIsProcessing(false);
       setTimeout(() => {

@@ -9,6 +9,7 @@ const secureStorage = new SecureStorage();
 interface UploadContextInterface {
   uploads: UploadResponse[]
   addUpload: (upload: UploadResponse) => void
+  updateUploads: (upload: UploadResponse[]) => void
   isProcessing: boolean
   processingSteps: string[];
   setProcessingSteps: (v: string[])=> void;
@@ -27,14 +28,38 @@ export function UploadsProviderContainer({ children }: { children: ReactNode }) 
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const storedUploads = secureStorage.getItem(Constants.uploads)
-    if (storedUploads) setUploads(JSON.parse(storedUploads))
-  }, [])
+    const storedUploads = secureStorage.getItem(Constants.uploads);
+    if (storedUploads) {
+      try {
+        setUploads(JSON.parse(storedUploads));
+      } catch (error) {
+        console.error('Failed to parse stored uploads:', error);
+        secureStorage.removeItem(Constants.uploads);
+      }
+    }
+  }, []);
 
   const addUpload = (upload: UploadResponse) => {
-    setUploads(prev => [upload, ...prev])
-    secureStorage.storeItem(Constants.uploads, JSON.stringify([upload, ...uploads]))
-  }
+    setUploads(prev => {
+      const exists = prev.some(u => u.id === upload.id);
+      if (exists) {
+        return prev;
+      }
+      const newUploads = [upload, ...prev];
+      secureStorage.storeItem(Constants.uploads, JSON.stringify(newUploads));
+      return newUploads;
+    });
+  };
+
+  const updateUploads = (response: UploadResponse[]) => {
+    const uniqueUploads = response.reduce((acc: UploadResponse[], current: UploadResponse) => {
+      const exists = acc.some(upload => upload.id === current.id);
+      return exists ? acc : [...acc, current];
+    }, []);
+
+    setUploads(uniqueUploads);
+    secureStorage.storeItem(Constants.uploads, JSON.stringify(uniqueUploads));
+  };
 
   return (
     <UploadsContextProvider
@@ -43,6 +68,7 @@ export function UploadsProviderContainer({ children }: { children: ReactNode }) 
         addUpload,
         isProcessing,
         processingSteps,
+        updateUploads,
         progress,
         setProgress,
         setIsProcessing,

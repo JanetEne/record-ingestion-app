@@ -141,7 +141,7 @@ mock.onPost('/api/uploads').reply(async (config) => {
     return [201, {
       success: true,
       data: newUpload,
-      message: 'File uploaded successfully'
+      message: 'Your file has been uploaded and processed successfully.'
     }]
   } 
   catch (error) {
