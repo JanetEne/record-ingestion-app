@@ -1,87 +1,95 @@
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableCard,
-  Table,
-} from '@/components/Table';
-import { Separator } from '@radix-ui/react-select';
+import UploadsContext from '@/lib/context/uploadsContext';
+import { UploadResponse } from '@/lib/interface/upload';
+import { cn } from '@/utils/cn';
+import { format } from 'date-fns';
+import { useContext } from 'react';
 
 const Details = () => {
+  const { uploads } = useContext(UploadsContext);
+
   return (
     <div className="w-full">
       <p className="text-xl font-medium mb-6">Records</p>
-      <Table>
-        <TableHeader>
-          <TableRow className="border-none">
-            <TableHead>File Name</TableHead>
-            <TableHead className="text-center">Upload Date</TableHead>
-            <TableHead className="text-center">Start Date</TableHead>
-            <TableHead className="text-center">End Date</TableHead>
-            <TableHead className="text-center">Date Type</TableHead>
-            <TableHead className="text-center">
-              Number of Records Processed
-            </TableHead>
-            <TableHead className="text-center"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array(5)
-            .fill('')
-            .map((_, index) => (
-              <TableRow key={index} className="cursor-pointer">
-                <TableCell className="text-sm font-medium">
-                  Task 2 CSV
-                </TableCell>
-                <TableCell className="text-center text-sm font-medium">
-                  March 24, 2025
-                </TableCell>
-                <TableCell className="text-center text-sm font-medium">
-                  April 1, 2025
-                </TableCell>
-                <TableCell className="text-center text-sm font-medium">
-                  July 2, 2025
-                </TableCell>
-                <TableCell className="text-center text-sm font-medium">
-                  Modification Date
-                </TableCell>
-                <TableCell className="text-center text-sm font-medium">
-                  500
-                </TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
+      <div className="rounded-md font-normal border border-gray-200 overflow-hidden mt-8">
+        <div className="overflow-x-auto ">
+          <div className="inline-block min-w-full ">
+            <div className=" overflow-x-auto ">
+              <table className="table-auto min-w-full">
+                <thead className="bg-[#4f54f8] text-white">
+                  <tr className="border-b border-grey">
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      File Name
+                    </th>
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      Upload Date
+                    </th>
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      Start Date
+                    </th>
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      End Date
+                    </th>
 
-      <div className="flex flex-col gap-4">
-        {Array(5)
-          .fill('')
-          .map((_, index) => (
-            <TableCard key={index}>
-              <div className="flex justify-between items-center">
-                <div className="grid grid-cols-[auto_1fr] gap-2 items-center">
-                  <div className="w-6 h-6 rounded-full bg-lemon"></div>
-                  <div>
-                    <h5 className="text-sm font-medium text-gray-800">
-                      Store Name
-                    </h5>
-                    <p className="text-xs font-medium text-gray-600">
-                      namesample@mail.com
-                    </p>
-                  </div>
-                </div>
-                <p className="text-xs font-medium text-gray-600">
-                  070111222333
-                </p>
-              </div>
-              <Separator className="bg-gray-100 my-4" />
-            </TableCard>
-          ))}
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      Date Type
+                    </th>
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      Number of Records Processed
+                    </th>
+
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap">
+                      More
+                    </th>
+                    <th className="text-sm font-medium text-left p-4 whitespace-nowrap"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {uploads
+                    .map((upload: UploadResponse, index) => (
+                      <tr key={upload.id}   className={cn('cursor-pointer', {
+                        'border-b border-gray-200':
+                          uploads.length > 1 &&
+                          index < uploads.length - 1,
+                      })}>
+
+                        <td className="text-sm p-4 whitespace-nowrap">
+                          {upload.fileName}
+                        </td>
+                        <td className="text-sm p-4 whitespace-nowrap">
+                          {upload.uploadDate &&
+                            format(
+                              new Date(upload.uploadDate),
+                              'MMM do, yyyy H:mma'
+                            )}            </td>
+                        <td className="text-sm p-4 whitespace-nowrap">
+                          {upload.startDate &&
+                            format(
+                              new Date(upload.startDate),
+                              'MMM do, yyyy H:mma'
+                            )}               </td><td className="text-sm p-4 whitespace-nowrap">
+                          {upload.endDate &&
+                            format(
+                              new Date(upload.endDate),
+                              'MMM do, yyyy H:mma'
+                            )}
+                        </td><td className="text-sm p-4 whitespace-nowrap">
+                          {upload.dateType}
+
+                        </td>
+                        <td className="text-sm p-4 whitespace-nowrap">
+                          {upload.numOfRecords}
+
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
   );
 };
 

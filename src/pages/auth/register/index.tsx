@@ -36,14 +36,13 @@ const Register = () => {
   const onSubmit = async (values: RegisterInterface) => {
     try {
       const response = await axios.post('/api/register', values);
-      if (response) {
-        toast.success('Registration successful');
-        navigate('/auth/login');
-      }
+      toast.success(response.data.message);
+      navigate('/auth/login');
     } catch (error: any) {
-      toast.error('Registration failed, Please try again');
+      toast.error(error?.response?.data?.error || 'Registration failed, Please try again');
     }
   };
+  
 
 
   return (

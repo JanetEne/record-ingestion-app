@@ -28,6 +28,7 @@ export const AuthProviderContainer: FC<Props> = ({ children }) => {
   const logout = () => {
     setUser(null);
     secureStorage.removeItem(Constants.currentUser);
+    secureStorage.removeItem(Constants.uploads);
   };
 
   useEffect(() => {

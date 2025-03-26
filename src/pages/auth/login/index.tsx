@@ -36,12 +36,12 @@ const Login = () => {
     try {
       const response = await axios.post('/api/login', values);
       if (response) {
-        updateUser(response.data)
-        toast.success('Registration successful');
+        updateUser(response.data.data)
+        toast.success(response.data.message);
         navigate('/auth/login');
       }
     } catch (error: any) {
-      toast.error('Invalid credentials, Please try again');
+      toast.error(error?.response?.data?.error || 'Invalid credentials, Please try again');
     }
   };
 
