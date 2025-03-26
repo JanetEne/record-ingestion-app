@@ -35,74 +35,71 @@ const Login = () => {
     try {
       const response = await axios.post('/api/login', values);
       if (response) {
-        updateUser(response.data.data)
+        updateUser(response.data.data);
         toast.success(response.data.message);
         navigate('/auth/login');
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.error || 'Registration failed, Please try again');
-
+      toast.error(
+        error?.response?.data?.error || 'Registration failed, Please try again'
+      );
     }
   };
 
   return (
     <>
-      <h5 className="font-medium text-2xl mb-10">Welcome Back!</h5>
-        <FormProvider {...formMethods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex flex-col gap-2 relative">
-              <p>Email</p>
-              <Input
-                placeholder="Enter Email Address"
-                type="email"
-                {...register('email')}
-              />
-              {errors && (
-                <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
-                  {errors.email?.message}
-                </p>
-              )}
-            </div>
+      <h5 className="font-medium text-2xl mb-10">Login</h5>
+      <FormProvider {...formMethods}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="flex flex-col gap-2 relative">
+            <p>Email</p>
+            <Input
+              placeholder="Enter Email Address"
+              type="email"
+              {...register('email')}
+            />
+            {errors && (
+              <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                {errors.email?.message}
+              </p>
+            )}
+          </div>
 
-            <div className="flex flex-col gap-2 relative">
-              <p>Password</p>
-              <Input
-                placeholder="Enter Password"
-                type={showPassword ? 'text' : 'password'}
-                {...register('password')}
-                trailing={
-                  <EyeIcon
-                    className="w-4 h-4 cursor-pointer"
-                    onClick={() => setShowPassword(true)}
-                  />
-                }
-              />
-              {errors && (
-                <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
-                  {errors.password?.message}
-                </p>
-              )}
-            </div>
+          <div className="flex flex-col gap-2 relative">
+            <p>Password</p>
+            <Input
+              placeholder="Enter Password"
+              type={showPassword ? 'text' : 'password'}
+              {...register('password')}
+              trailing={
+                <EyeIcon
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => setShowPassword(true)}
+                />
+              }
+            />
+            {errors && (
+              <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                {errors.password?.message}
+              </p>
+            )}
+          </div>
 
-            <Button
-              className="w-full mt-6"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting && (
-                <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
-              )}
-              Login
-            </Button>
-          </form>
-        </FormProvider>
+          <Button className="w-full mt-6" type="submit" disabled={isSubmitting}>
+            {isSubmitting && (
+              <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
+            )}
+            Login
+          </Button>
+        </form>
+      </FormProvider>
 
-        <p className="text-center mt-4 text-[#344054] text-sm">
-          Don't have an account?{' '}
-          <Link to="/auth/register" className="font-semibold">
-            Register
-          </Link>
-        </p>
+      <p className="text-center mt-4 text-[#344054] text-sm">
+        Don't have an account?{' '}
+        <Link to="/auth/register" className="font-semibold">
+          Register
+        </Link>
+      </p>
     </>
   );
 };

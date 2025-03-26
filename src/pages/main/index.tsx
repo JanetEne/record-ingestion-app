@@ -9,10 +9,10 @@ const MainPages = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="uploads" element={<UploadFile />} />
-        <Route path="details" element={<Details />} />
-        <Route path="details/:id" element={<RecordContent />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/uploads" element={<UploadFile />} />
+        <Route path="/details" element={<Details />} />
+        <Route path="/details/:id" element={<RecordContent />} />
         <Route index element={<Dashboard />} />
       </Route>
     </Routes>

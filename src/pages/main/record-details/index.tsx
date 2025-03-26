@@ -1,11 +1,12 @@
-import Pagination from "@/components/Pagination";
-import UploadsContext from "@/lib/context/uploadsContext";
-import { UploadResponse } from "@/lib/interface/upload";
-import { cn } from "@/utils/cn";
-import { simulateDelay } from "@/utils/simulateDelay";
-import { ArrowLeft } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import Pagination from '@/components/Pagination';
+import UploadsContext from '@/lib/context/uploadsContext';
+import { UploadResponse } from '@/lib/interface/upload';
+import { cn } from '@/utils/cn';
+import { simulateDelay } from '@/utils/simulateDelay';
+import { ArrowLeft } from 'lucide-react';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { toast } from 'sonner';
 
 const RecordContent = () => {
   const { id } = useParams();
@@ -22,10 +23,10 @@ const RecordContent = () => {
       setIsLoading(true);
       await simulateDelay(800);
 
-      const foundUpload = uploads.find(u => u.id === id);
+      const foundUpload = uploads.find((u) => u.id === id);
       setUpload(foundUpload || null);
     } catch (err) {
-      console.error("Error fetching upload details:", err);
+      toast.error('Failed to fetch upload details');
     } finally {
       setIsLoading(false);
     }
@@ -38,7 +39,8 @@ const RecordContent = () => {
   const totalRecords = upload?.processedFile?.length || 0;
   const startIndex = (currentPage - 1) * size;
   const endIndex = startIndex + size;
-  const paginatedData = upload?.processedFile?.slice(startIndex, endIndex) || [];
+  const paginatedData =
+    upload?.processedFile?.slice(startIndex, endIndex) || [];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -65,10 +67,10 @@ const RecordContent = () => {
                 <table className="table-auto min-w-full">
                   <thead className="bg-[#4f54f8] text-white">
                     <tr className="border-b border-grey">
-                      {Object.keys(upload.processedFile[0]).map(key => (
+                      {Object.keys(upload.processedFile[0]).map((key) => (
                         <th
                           key={key}
-                          className="text-sm font-medium text-left p-4 whitespace-nowrap"
+                          className="text-sm font-medium text-left p-4 whitespace-nowrap capitalize"
                         >
                           {key}
                         </th>
@@ -77,13 +79,18 @@ const RecordContent = () => {
                   </thead>
                   <tbody>
                     {paginatedData.map((row, index) => (
-                      <tr key={index} className={cn('cursor-pointer border-b border-gray-200')}>
+                      <tr
+                        key={index}
+                        className={cn('border-b border-gray-200')}
+                      >
                         {Object.values(row).map((value, rowIndex) => (
                           <td
                             key={rowIndex}
                             className="text-sm p-4 whitespace-nowrap"
                           >
-                            {value !== null && value !== undefined ? String(value) : '-'}
+                            {value !== null && value !== undefined
+                              ? String(value)
+                              : '-'}
                           </td>
                         ))}
                       </tr>

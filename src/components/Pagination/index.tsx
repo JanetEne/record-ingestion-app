@@ -2,7 +2,6 @@ import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../Button';
 
-
 const Pagination = ({
   totalItems,
   itemsPerPage,
@@ -57,9 +56,9 @@ const Pagination = ({
 
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
-        <li key={i} className={`${i === page ? ' bg-white/20 ' : ''} `}>
+        <li key={i} className={`${i === page ? ' bg-gray-200/20 ' : ''} `}>
           <button
-            className="w-8 h-8 border border-gray-300 cursor-pointer hover:opacity-60 text-sm"
+            className="w-8 h-8 border border-gray-300 rounded-sm cursor-pointer hover:opacity-60 text-sm"
             onClick={() => handlePageChange(i)}
           >
             {i}
@@ -95,20 +94,20 @@ const Pagination = ({
         <p className="text-sm">Show:</p>
         <div
           onClick={() => setMenu(!menu)}
-          className="bg-gray-200 rounded-md w-16 relative cursor-pointer flex items-center justify-between px-2"
+          className="bg-gray-200 rounded-md w-16 relative cursor-pointer flex items-center justify-between px-2 py-1"
         >
           <p className="text-center">{itemsPerPage}</p>
           <span>
-            <ChevronDown height={10} width={10} />
+            <ChevronDown height={14} width={14} />
           </span>
           {menu && (
             <div
               ref={wrapperRef}
-              className="absolute bottom-[90%] left-0 w-full bg-gray-200 rounded-t-md py-1 flex flex-col gap-1"
+              className="absolute bottom-9 left-0 rounded-t-md py-1 flex flex-col gap-1.5 w-full bg-white border border-gray-300 rounded-md max-h-[100px] overflow-y-auto hide-scrollbar"
             >
               {pageSizes.map((item, index) => (
                 <p
-                  className="cursor-pointer text-center hover:bg-white/20"
+                  className="cursor-pointer text-center hover:bg-gray-200/20"
                   key={index}
                   onClick={() => {
                     setSize!(item);

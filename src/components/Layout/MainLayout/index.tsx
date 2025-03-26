@@ -4,10 +4,10 @@ import { Outlet } from 'react-router';
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col w-full bg-gray-100">
+    <div className="min-h-screen h-full flex flex-col w-full bg-gray-100">
       <NavBar />
       <div className="flex-1 py-10">
-        <Container className="h-full">
+        <Container>
           <Outlet />
         </Container>
       </div>

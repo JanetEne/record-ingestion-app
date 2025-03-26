@@ -7,7 +7,7 @@ const Dashboard = () => {
   const { user } = useContext(AuthContext);
 
   return (
-    <div className="flex justify-center items-center flex-col h-full">
+    <div className="flex justify-center items-center flex-col min-h-[80vh]">
       <h5 className="text-3xl lg:text-5xl font-semibold mb-6">
         Welcome {user?.firstName} {user?.lastName},
       </h5>
@@ -17,11 +17,13 @@ const Dashboard = () => {
       </p>
 
       <div className="flex gap-4 mt-8">
-        <Link to={'/main/uploads'}>
-          <Button className='px-8'>Upload Files</Button>
+        <Link to={'/uploads'}>
+          <Button className="px-8">Upload Files</Button>
         </Link>
-        <Link to={'/main/details'}>
-          <Button variant={'outline'} className='px-8'>View Details</Button>
+        <Link to={'/details'}>
+          <Button variant={'outline'} className="px-8">
+            View Details
+          </Button>
         </Link>
       </div>
     </div>

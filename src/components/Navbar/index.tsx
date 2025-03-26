@@ -12,21 +12,21 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/auth/login');
   };
 
   return (
     <nav className="sticky top-0 w-full bg-white py-4">
       <Container>
         <div className="w-full flex justify-between items-center">
-          <NavLink to="/main/dashboard">
+          <NavLink to="/">
             <img src={CredrailsLogo} alt="credrails-logo" />
           </NavLink>
           <div className="flex lg:gap-4">
-            <NavLink to="/main/uploads">
+            <NavLink to="/uploads">
               <Button variant={'ghost'}>Uploads</Button>
             </NavLink>
-            <NavLink to="/main/details">
+            <NavLink to="/details">
               <Button variant={'ghost'}>Details</Button>
             </NavLink>
             <Button

@@ -22,11 +22,21 @@ import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
-
 const UploadFile = () => {
-  const { addUpload, progress, setProgress, isProcessing, setIsProcessing, processingSteps, setProcessingSteps } = useContext(UploadsContext)
+  const {
+    addUpload,
+    progress,
+    setProgress,
+    isProcessing,
+    setIsProcessing,
+    processingSteps,
+    setProcessingSteps,
+  } = useContext(UploadsContext);
+
+  const navigate = useNavigate();
 
   const formMethods = useForm<IUpload>({
     resolver: zodResolver(uploadSchema),
@@ -34,9 +44,9 @@ const UploadFile = () => {
       startDate: undefined,
       endDate: undefined,
       dateType: '',
-      file: undefined
+      file: undefined,
     },
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const {
@@ -68,11 +78,17 @@ const UploadFile = () => {
         parsedData = await parseXLSX(file);
       }
 
-      setProcessingSteps([...processingSteps, 'Cleaning data (removing empty rows, trimming whitespaces)...']);
+      setProcessingSteps([
+        ...processingSteps,
+        'Cleaning data (removing empty rows, trimming whitespaces)...',
+      ]);
       setProgress(60);
 
       const processedData = await cleanupFileData(parsedData);
-      setProcessingSteps([...processingSteps, `Processed ${processedData.length} valid records`]);
+      setProcessingSteps([
+        ...processingSteps,
+        `Processed ${processedData.length} valid records`,
+      ]);
       setProgress(80);
 
       const uploadPayload: UploadPaylod = {
@@ -81,7 +97,7 @@ const UploadFile = () => {
         dateType,
         fileName: file.name,
         numOfRecords: processedData.length,
-        processedFile: processedData
+        processedFile: processedData,
       };
 
       setProcessingSteps([...processingSteps, 'Uploading processed data...']);
@@ -92,13 +108,22 @@ const UploadFile = () => {
       if (response) {
         addUpload(response.data.data);
         toast.success(response.data.message);
-        setProcessingSteps([...processingSteps, 'Upload completed successfully!']);
+        setProcessingSteps([
+          ...processingSteps,
+          'Upload completed successfully!',
+        ]);
         setProgress(100);
         reset();
+        navigate('/details');
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.error || 'Failed to upload, please try again');
-      setProcessingSteps([...processingSteps, 'An Error occured while processing file']);
+      toast.error(
+        error?.response?.data?.error || 'Failed to upload, please try again'
+      );
+      setProcessingSteps([
+        ...processingSteps,
+        'An Error occured while processing file',
+      ]);
     } finally {
       setIsProcessing(false);
       setTimeout(() => {
@@ -114,7 +139,7 @@ const UploadFile = () => {
       <div className="flex justify-center items-center flex-col">
         <Card className="max-w-2xl w-full">
           <FormProvider {...formMethods}>
-            <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid lg:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1 relative">
                   <p>Start Date</p>
@@ -130,10 +155,10 @@ const UploadFile = () => {
                   />
                   {errors.startDate && (
                     <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
-                      {errors.startDate.message}</p>
+                      {errors.startDate.message}
+                    </p>
                   )}
                 </div>
-
 
                 <div className="flex flex-col gap-1 relative">
                   <p>End Date</p>
@@ -141,14 +166,13 @@ const UploadFile = () => {
                     name="endDate"
                     control={control}
                     render={({ field }) => (
-                      <DatePicker
-                        field={field}
-                        placeholder="Select end date"
-                      />
+                      <DatePicker field={field} placeholder="Select end date" />
                     )}
                   />
                   {errors.endDate && (
-                    <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">{errors.endDate.message}</p>
+                    <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                      {errors.endDate.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -175,7 +199,9 @@ const UploadFile = () => {
                   )}
                 />
                 {errors.dateType && (
-                  <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">{errors.dateType.message}</p>
+                  <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                    {errors.dateType.message}
+                  </p>
                 )}
               </div>
 
@@ -196,7 +222,9 @@ const UploadFile = () => {
                   )}
                 />
                 {errors.file && (
-                  <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">{errors.file.message}</p>
+                  <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                    {errors.file.message}
+                  </p>
                 )}
               </div>
 
@@ -209,9 +237,11 @@ const UploadFile = () => {
                     </p>
                   </div>
 
-                  <Progress value={progress} className='w-full' />
+                  <Progress value={progress} className="w-full" />
 
-                  <p className="text-xs text-muted-foreground">Cleaning up data and processing records...</p>
+                  <p className="text-xs text-muted-foreground">
+                    Cleaning up data and processing records...
+                  </p>
                 </div>
               )}
 
@@ -223,7 +253,11 @@ const UploadFile = () => {
                 {(isSubmitting || isProcessing) && (
                   <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
                 )}
-                {isProcessing ? 'Processing...' : isSubmitting ? 'Uploading...' : 'Upload'}
+                {isProcessing
+                  ? 'Processing...'
+                  : isSubmitting
+                  ? 'Uploading...'
+                  : 'Upload'}
               </Button>
             </form>
           </FormProvider>

@@ -1,5 +1,14 @@
 @import 'tailwindcss';
 
 :root {
-    --auth-bg-url: url('@/assets/images/credrails-bg.jpg');
+  --auth-bg-url: url('@/assets/images/credrails-bg.jpg');
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar on WebKit browsers */
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+  scrollbar-width: none; /* Hide scrollbar on Firefox */
 }
