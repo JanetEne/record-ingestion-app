@@ -1,14 +1,12 @@
-import { Loader2 } from 'lucide-react';
 import * as React from 'react';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   fileName: string;
-  loading?: boolean;
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, onChange, fileName, loading, ...props }) => {
+  ({ className, onChange, fileName, ...props }) => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     return (
@@ -26,17 +24,12 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
               }}
             >
               <p> Choose File</p>
-              {loading ? (
-                <span>
-                  <Loader2 className="loading-spinner w-5 h-5 ml-2" />
-                </span>
-              ) : null}
             </button>
           </div>
           <input
             type="file"
             className="hidden"
-            accept="image/*,application/pdf"
+            accept=".csv, .xlsx"
             onChange={onChange}
             ref={fileInputRef}
             {...props}
