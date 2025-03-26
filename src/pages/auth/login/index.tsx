@@ -6,7 +6,7 @@ import { Login as LoginInterface } from '@/lib/interface/auth';
 import { loginSchema } from '@/lib/schemas/auth';
 import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from '@/lib/api/auth';
+import axios from 'axios';
 import { EyeIcon, Loader2 } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -41,7 +41,8 @@ const Login = () => {
         navigate('/auth/login');
       }
     } catch (error: any) {
-      toast.error(error?.response?.data?.error || 'Invalid credentials, Please try again');
+      toast.error(error?.response?.data?.error || 'Registration failed, Please try again');
+
     }
   };
 

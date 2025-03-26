@@ -1,4 +1,4 @@
-import axios from '@/lib/api/auth';
+import axios from 'axios';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
@@ -36,8 +36,10 @@ const Register = () => {
   const onSubmit = async (values: RegisterInterface) => {
     try {
       const response = await axios.post('/api/register', values);
-      toast.success(response.data.message);
-      navigate('/auth/login');
+      if (response) {
+        toast.success(response.data.message);
+        navigate('/auth/login');
+      }   
     } catch (error: any) {
       toast.error(error?.response?.data?.error || 'Registration failed, Please try again');
     }

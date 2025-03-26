@@ -4,6 +4,7 @@ import { SecureStorage } from '@/utils/storage';
 import { Constants } from '@/utils/constants';
 import { v4 as uuidv4 } from 'uuid';
 import { Login, Register } from '../interface/auth';
+import { UploadPaylod, UploadResponse } from '../interface/upload';
 import { User } from '../interface/user';
 
 const secureStorage = new SecureStorage();
@@ -22,7 +23,14 @@ const saveCurrentUser = (user: User | null) => {
   }
 };
 
-mock.onPost('/api/register').reply((config) => {
+const getFileUploads = (): UploadResponse[] => {
+  const uploads = secureStorage.getItem(Constants.uploads);
+  return uploads ? JSON.parse(uploads) : [];
+};
+
+
+mock.onPost('/api/register').reply(async (config) => {
+
   try {
     const userData: Register = JSON.parse(config.data);
 
@@ -67,7 +75,8 @@ mock.onPost('/api/register').reply((config) => {
   }
 });
 
-mock.onPost('/api/login').reply(async (config) => {
+mock.onPost('/api/login').reply(async (config) => {  
+
   try {
     const loginData: Login = JSON.parse(config.data);
     const currentUser = getCurrentUser();
@@ -102,4 +111,66 @@ mock.onPost('/api/login').reply(async (config) => {
   }
 });
 
-export default axios;
+mock.onPost('/api/uploads').reply(async (config) => {
+
+  try{
+    const uploadData: UploadPaylod = JSON.parse(config.data);
+    const { startDate, endDate, dateType, fileName, numOfRecords, processedFile } = uploadData
+  
+    if (!uploadData) {
+      return [
+        400,
+        {
+          success: false,
+          error: 'File upload failed, Please try again',
+        },
+      ];
+    }
+  
+    const newUpload: UploadResponse = {
+      id: uuidv4(),
+      uploadDate: new Date().toISOString(),
+      startDate,
+      endDate,
+      dateType,
+      fileName,
+      numOfRecords,
+      processedFile
+    }
+  
+    return [201, {
+      success: true,
+      data: newUpload,
+      message: 'File uploaded successfully'
+    }]
+  } 
+  catch (error) {
+    return [
+      400,
+      {
+        success: false,
+        error: 'Invalid request',
+      },
+    ];
+  }
+
+});
+
+mock.onGet('/api/uploads').reply(async () => {
+  const uploads = getFileUploads()
+
+  if (!uploads) {
+    return [500, {
+      success: false,
+      error: 'Failed to fetch uploads'
+    }]
+  }
+
+  return [200, {
+    success: true,
+    data: uploads
+  }]
+
+})
+
+export default mock;
