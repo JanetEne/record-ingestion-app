@@ -11,6 +11,7 @@ interface ContextInterface {
   user: User | null;
   updateUser: (value: User) => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<ContextInterface>({} as ContextInterface);
@@ -18,6 +19,7 @@ export const AuthContextProvider = AuthContext.Provider;
 
 export const AuthProviderContainer: FC<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const secureStorage = new SecureStorage();
 
   const updateUser = (value: User) => {
@@ -33,6 +35,8 @@ export const AuthProviderContainer: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     const storedUser = secureStorage.getItem(Constants.currentUser);
+    setIsLoading(true);
+    
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
@@ -41,12 +45,14 @@ export const AuthProviderContainer: FC<Props> = ({ children }) => {
         secureStorage.removeItem(Constants.currentUser);
       }
     }
+    setIsLoading(false);
   }, []);
 
   const contextValue: ContextInterface = {
     user,
     updateUser,
     logout,
+    isLoading, // Include in context
   };
 
   return (

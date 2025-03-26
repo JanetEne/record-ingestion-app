@@ -5,17 +5,16 @@ import { SecureStorage } from '@/utils/storage';
 
 const secureStorage = new SecureStorage();
 
-type UploadStatus = 'idle' | 'uploading' | 'processing' | 'success' | 'error';
 
 interface UploadContextInterface {
   uploads: UploadResponse[]
   addUpload: (upload: UploadResponse) => void
-  isLoading: boolean
-  status: UploadStatus;
+  isProcessing: boolean
+  processingSteps: string[];
+  setProcessingSteps: (v: string[])=> void;
   progress: number;
   setProgress: (v: number)=> void;
-  setIsLoading: (v: boolean) => void;
-  setStatus: (v: UploadStatus) => void
+  setIsProcessing: (v: boolean) => void;
 }
 
 const UploadsContext = createContext<UploadContextInterface>({} as UploadContextInterface)
@@ -23,8 +22,8 @@ export const UploadsContextProvider = UploadsContext.Provider;
 
 export function UploadsProviderContainer({ children }: { children: ReactNode }) {
   const [uploads, setUploads] = useState<UploadResponse[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [status, setStatus] = useState<UploadStatus>('idle')
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [processingSteps, setProcessingSteps] = useState<string[]>([]);
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -42,12 +41,12 @@ export function UploadsProviderContainer({ children }: { children: ReactNode }) 
       value={{ 
         uploads, 
         addUpload,
-        isLoading,
-        status,
+        isProcessing,
+        processingSteps,
         progress,
         setProgress,
-        setIsLoading,
-        setStatus
+        setIsProcessing,
+        setProcessingSteps
       }}
     >
       {children}

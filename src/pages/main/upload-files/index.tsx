@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { DatePicker } from '@/components/DatePicker';
 import { FileInput } from '@/components/FileInput';
+import { Progress } from '@/components/ProgressBar';
 import {
   Select,
   SelectContent,
@@ -11,21 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/Select';
+import UploadsContext from '@/lib/context/uploadsContext';
 import { IUpload, UploadPaylod } from '@/lib/interface/upload';
 import { uploadSchema } from '@/lib/schemas/upload';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
-import { cn } from '@/utils/cn';
-import { useContext } from 'react';
-import UploadsContext from '@/lib/context/uploadsContext';
-import { toast } from 'sonner';
-import { parseCSV, parseXLSX } from '@/utils/parseFiles';
 import { cleanupFileData } from '@/utils/cleanupFileData';
+import { cn } from '@/utils/cn';
+import { parseCSV, parseXLSX } from '@/utils/parseFiles';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
+import { useContext } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 
 const UploadFile = () => {
-  const { addUpload } = useContext(UploadsContext)
+  const { addUpload, progress, setProgress, isProcessing, setIsProcessing, processingSteps, setProcessingSteps } = useContext(UploadsContext)
 
   const formMethods = useForm<IUpload>({
     resolver: zodResolver(uploadSchema),
@@ -46,50 +47,70 @@ const UploadFile = () => {
   } = formMethods;
 
   const onSubmit = async (values: IUpload) => {
-    const { startDate, endDate, dateType, file } = values
+    const { startDate, endDate, dateType, file } = values;
 
-    let parsedData: any[] = []
-
-    if (file) {
-      const fileType = file.name.split('.').pop()?.toLowerCase()
-
-      if (fileType === 'csv') {
-        parsedData = await parseCSV(file)
-      } else if (fileType === 'xlsx') {
-        parsedData = await parseXLSX(file)
-      }
-
-    }
-
-    const processedData = cleanupFileData(parsedData)
-
-    const uploadPayload: UploadPaylod = {
-      startDate,
-      endDate,
-      dateType,
-      fileName: file?.name!,
-      numOfRecords: processedData.length,
-      processedFile: processedData
-    }
+    if (!file) return;
 
     try {
-      const response = await axios.post('/api/uploads', uploadPayload)
-      if (response) {
-        addUpload(response.data.data)
-        toast.success(response.data.message);
-        reset()
+      setIsProcessing(true);
+      setProcessingSteps(['Starting file processing...']);
+      setProgress(10);
+
+      setProcessingSteps([...processingSteps, 'Parsing file...']);
+      setProgress(30);
+
+      const fileType = file.name.split('.').pop()?.toLowerCase();
+      let parsedData: any[] = [];
+
+      if (fileType === 'csv') {
+        parsedData = await parseCSV(file);
+      } else if (fileType === 'xlsx') {
+        parsedData = await parseXLSX(file);
       }
-    }
-    catch (error: any) {
+
+      setProcessingSteps([...processingSteps, 'Cleaning data (removing empty rows, trimming whitespaces)...']);
+      setProgress(60);
+
+      const processedData = await cleanupFileData(parsedData);
+      setProcessingSteps([...processingSteps, `Processed ${processedData.length} valid records`]);
+      setProgress(80);
+
+      const uploadPayload: UploadPaylod = {
+        startDate,
+        endDate,
+        dateType,
+        fileName: file.name,
+        numOfRecords: processedData.length,
+        processedFile: processedData
+      };
+
+      setProcessingSteps([...processingSteps, 'Uploading processed data...']);
+      setProgress(90);
+
+      const response = await axios.post('/api/uploads', uploadPayload);
+
+      if (response) {
+        addUpload(response.data.data);
+        toast.success(response.data.message);
+        setProcessingSteps([...processingSteps, 'Your file has been uploaded and processed successfully.']);
+        setProgress(100);
+        reset();
+      }
+    } catch (error: any) {
       toast.error(error?.response?.data?.error || 'Failed to upload, please try again');
+      setProcessingSteps([...processingSteps, 'Error during processing']);
+    } finally {
+      setIsProcessing(false);
+      setTimeout(() => {
+        setProgress(0);
+        setProcessingSteps([]);
+      }, 2000);
     }
-
-
-  }
+  };
 
   return (
     <>
-      <p className="text-xl font-medium mb-6">Upload File</p>
+      <p className="text-2xl font-medium mb-6">Upload File</p>
       <div className="flex justify-center items-center flex-col">
         <Card className="max-w-2xl w-full">
           <FormProvider {...formMethods}>
@@ -179,15 +200,30 @@ const UploadFile = () => {
                 )}
               </div>
 
+              {(isProcessing || isSubmitting) && (
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-medium text-gray-700">
+                      {isProcessing ? 'Processing...' : 'Uploading...'}
+                      {progress > 0 && ` (${progress}%)`}
+                    </p>
+                  </div>
+
+                  <Progress value={progress} className='w-full' />
+
+                  <p className="text-xs text-muted-foreground">Cleaning up data and processing records...</p>
+                </div>
+              )}
+
               <Button
-                className="w-full mt-6"
+                className="w-full mt-2"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isProcessing}
               >
-                {isSubmitting && (
+                {(isSubmitting || isProcessing) && (
                   <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
                 )}
-                Upload
+                {isProcessing ? 'Processing...' : isSubmitting ? 'Uploading...' : 'Upload'}
               </Button>
             </form>
           </FormProvider>

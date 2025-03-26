@@ -1,2 +1,2 @@
-export const simulateDelay = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+export const simulateDelay = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time));

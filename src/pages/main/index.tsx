@@ -7,10 +7,10 @@ import Details from './file-details';
 const MainPages = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/uploads" element={<UploadFile />} />
-        <Route path="/details" element={<Details />} />
+      <Route element={<MainLayout />}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="uploads" element={<UploadFile />} />
+        <Route path="details" element={<Details />} />
         <Route index element={<Dashboard />} />
       </Route>
     </Routes>

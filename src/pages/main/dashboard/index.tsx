@@ -18,10 +18,10 @@ const Dashboard = () => {
 
       <div className="flex gap-4 mt-8">
         <Link to={'/main/uploads'}>
-          <Button>Upload Files</Button>
+          <Button className='px-8'>Upload Files</Button>
         </Link>
         <Link to={'/main/details'}>
-          <Button variant={'outline'}>View Details</Button>
+          <Button variant={'outline'} className='px-8'>View Details</Button>
         </Link>
       </div>
     </div>

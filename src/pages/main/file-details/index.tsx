@@ -1,15 +1,17 @@
+import { Button } from '@/components/Button';
 import UploadsContext from '@/lib/context/uploadsContext';
 import { UploadResponse } from '@/lib/interface/upload';
 import { cn } from '@/utils/cn';
 import { format } from 'date-fns';
 import { useContext } from 'react';
+import { Link } from 'react-router';
 
 const Details = () => {
   const { uploads } = useContext(UploadsContext);
 
   return (
     <div className="w-full">
-      <p className="text-xl font-medium mb-6">Records</p>
+      <p className="text-2xl font-medium mb-6">Records</p>
       <div className="rounded-md font-normal border border-gray-200 overflow-hidden mt-8">
         <div className="overflow-x-auto ">
           <div className="inline-block min-w-full ">
@@ -44,9 +46,9 @@ const Details = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {uploads
-                    .map((upload: UploadResponse, index) => (
-                      <tr key={upload.id}   className={cn('cursor-pointer', {
+                  {uploads.length > 0 ?
+                    uploads.map((upload: UploadResponse, index) => (
+                      <tr key={upload.id} className={cn('cursor-pointer', {
                         'border-b border-gray-200':
                           uploads.length > 1 &&
                           index < uploads.length - 1,
@@ -81,7 +83,17 @@ const Details = () => {
 
                         </td>
                       </tr>
-                    ))}
+                    ))
+                    : <tr className="h-[200px]">
+                      <td colSpan={9}>
+                        <div className='flex flex-col gap-4 w-full justify-center items-center'>
+                          <p className='text-base font-medium'>No Records have been added yet.</p>
+                          <Link to='/main/uploads'>
+                          <Button className='px-8'>Upload Files</Button>
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>}
                 </tbody>
               </table>
             </div>
