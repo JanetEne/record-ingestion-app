@@ -1,5 +1,4 @@
 import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
 import AuthContext from '@/lib/context/authContext';
 import { Login as LoginInterface } from '@/lib/interface/auth';
@@ -48,8 +47,7 @@ const Login = () => {
 
   return (
     <>
-      <h5 className="text-center font-medium text-2xl mb-10">Welcome Back!</h5>
-      <Card>
+      <h5 className="font-medium text-2xl mb-10">Welcome Back!</h5>
         <FormProvider {...formMethods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="flex flex-col gap-2 relative">
@@ -105,7 +103,6 @@ const Login = () => {
             Register
           </Link>
         </p>
-      </Card>
     </>
   );
 };

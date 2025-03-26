@@ -8,10 +8,10 @@ const Dashboard = () => {
 
   return (
     <div className="flex justify-center items-center flex-col h-full">
-      <h5 className="text-5xl font-semibold mb-6">
+      <h5 className="text-3xl lg:text-5xl font-semibold mb-6">
         Welcome {user?.firstName} {user?.lastName},
       </h5>
-      <p className="text-[#344054] text-xl font-normal">
+      <p className="text-[#344054] text-lg text-center lg:text-xl font-normal">
         Upload CSV or XLSX files, process them, and view the details of the
         records
       </p>

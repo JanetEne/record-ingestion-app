@@ -37,7 +37,7 @@ const Details = () => {
 
   return (
     <div className="w-full">
-      <p className="text-2xl font-medium mb-6">Records</p>
+      <p className="text-xl lg:text-2xl font-medium mb-6">Records</p>
       <div className="rounded-md font-normal border border-gray-200 overflow-hidden mt-8">
         <div className="overflow-x-auto ">
           <div className="inline-block min-w-full ">

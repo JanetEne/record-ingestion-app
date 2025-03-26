@@ -110,12 +110,12 @@ const UploadFile = () => {
 
   return (
     <>
-      <p className="text-2xl font-medium mb-6">Upload File</p>
+      <p className="text-xl lg:text-2xl font-medium mb-6">Upload File</p>
       <div className="flex justify-center items-center flex-col">
         <Card className="max-w-2xl w-full">
           <FormProvider {...formMethods}>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid lg:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1 relative">
                   <p>Start Date</p>
                   <Controller

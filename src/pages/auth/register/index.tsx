@@ -1,12 +1,11 @@
-import axios from 'axios';
 import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
 import { Register as RegisterInterface } from '@/lib/interface/auth';
 import { registerSchema } from '@/lib/schemas/auth';
 import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EyeIcon, Loader2 } from 'lucide-react';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
@@ -39,46 +38,49 @@ const Register = () => {
       if (response) {
         toast.success(response.data.message);
         navigate('/auth/login');
-      }   
+      }
     } catch (error: any) {
       toast.error(error?.response?.data?.error || 'Registration failed, Please try again');
     }
   };
-  
+
 
 
   return (
     <>
-      <h5 className="text-center font-medium text-2xl mb-10">Sign Up</h5>
-      <Card>
+      <h5 className="font-medium text-2xl mb-10">Sign Up</h5>
+      <div>
         <FormProvider {...formMethods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex flex-col gap-2 relative">
-              <p>First Name</p>
-              <Input
-                placeholder="Enter First Name"
-                type="text"
-                {...register('firstName')}
-              />
-              {errors && (
-                <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
-                  {errors.firstName?.message}
-                </p>
-              )}
-            </div>
+            <div className="grid lg:grid-cols-2 gap-4">
 
-            <div className="flex flex-col gap-2 relative">
-              <p>Last Name</p>
-              <Input
-                placeholder="Enter Last Name"
-                type="text"
-                {...register('lastName')}
-              />
-              {errors && (
-                <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
-                  {errors.lastName?.message}
-                </p>
-              )}
+              <div className="flex flex-col gap-2 relative">
+                <p>First Name</p>
+                <Input
+                  placeholder="Enter First Name"
+                  type="text"
+                  {...register('firstName')}
+                />
+                {errors && (
+                  <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                    {errors.firstName?.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2 relative">
+                <p>Last Name</p>
+                <Input
+                  placeholder="Enter Last Name"
+                  type="text"
+                  {...register('lastName')}
+                />
+                {errors && (
+                  <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
+                    {errors.lastName?.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col gap-2 relative">
@@ -98,7 +100,7 @@ const Register = () => {
             <div className="flex flex-col gap-2 relative">
               <p>Mobile Number</p>
               <Input
-                placeholder="Enter Phone Number"
+                placeholder="Enter Mobile Number"
                 type="tel"
                 {...register('mobileNumber')}
               />
@@ -115,7 +117,6 @@ const Register = () => {
                 placeholder="Enter Password"
                 type="password"
                 {...register('password')}
-                trailing={<EyeIcon className="w-4 h-4" />}
               />
               {errors && (
                 <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
@@ -130,7 +131,6 @@ const Register = () => {
                 placeholder="Enter Confirm Password"
                 type="password"
                 {...register('confirmPassword')}
-                trailing={<EyeIcon className="w-4 h-4" />}
               />
               {errors && (
                 <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
@@ -158,7 +158,7 @@ const Register = () => {
             Login
           </Link>
         </p>
-      </Card>
+      </div>
     </>
   );
 };

@@ -22,7 +22,7 @@ const NavBar = () => {
           <NavLink to="/main/dashboard">
             <img src={CredrailsLogo} alt="credrails-logo" />
           </NavLink>
-          <div className="flex gap-4">
+          <div className="flex lg:gap-4">
             <NavLink to="/main/uploads">
               <Button variant={'ghost'}>Uploads</Button>
             </NavLink>
@@ -30,7 +30,7 @@ const NavBar = () => {
               <Button variant={'ghost'}>Details</Button>
             </NavLink>
             <Button
-              className="!px-6 !py-2"
+              className="lg:!px-6 lg:!py-2 !py-1"
               variant={'calendar'}
               onClick={handleLogout}
             >

@@ -21,7 +21,7 @@ export const registerSchema = z
     mobileNumber: z
       .string()
       .min(10, 'Mobile number must be at least 10 digits'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+    password: z.string().min(6, 'Password must be at least 8 characters'),
     confirmPassword: z
       .string()
       .min(8, 'Confirm password must be at least 8 characters'),

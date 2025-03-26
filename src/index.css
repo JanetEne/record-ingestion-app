@@ -1,1 +1,5 @@
 @import 'tailwindcss';
+
+:root {
+    --auth-bg-url: url('@/assets/images/credrails-bg.jpg');
+}
