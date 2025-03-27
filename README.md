@@ -2,7 +2,11 @@
 
 A Simple React app built with Vite and TypeScript, featuring user authentication, file uploads, and record viewing. Uses `axios-mock-adapter` for mock APIs and `localStorage` for persistence, styled with `shadcn/ui` and Tailwind CSS.
 
-[Watch Demo 📹](https://vimeo.com/1069804731)
+---
+
+[Watch Demo](https://vimeo.com/1069804731) 📹
+
+![janet-ogenyi-demo](https://github.com/user-attachments/assets/4b07da02-bf5a-4631-894d-8f72b716caee)
 
 ---
 
