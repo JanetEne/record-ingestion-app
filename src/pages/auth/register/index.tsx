@@ -5,12 +5,14 @@ import { registerSchema } from '@/lib/schemas/auth';
 import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Loader2 } from 'lucide-react';
+import { EyeIcon, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const formMethods = useForm<RegisterInterface>({
@@ -115,8 +117,14 @@ const Register = () => {
               <p>Password</p>
               <Input
                 placeholder="Enter Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
+                trailing={
+                  <EyeIcon
+                    className="w-4 h-4 cursor-pointer"
+                    onClick={() => setShowPassword(true)}
+                  />
+                }
               />
               {errors && (
                 <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">
@@ -129,8 +137,14 @@ const Register = () => {
               <p>Confirm Password</p>
               <Input
                 placeholder="Enter Confirm Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('confirmPassword')}
+                trailing={
+                  <EyeIcon
+                    className="w-4 h-4 cursor-pointer"
+                    onClick={() => setShowPassword(true)}
+                  />
+                }
               />
               {errors && (
                 <p className="text-[12px] absolute -bottom-[1.2rem] text-red-500">

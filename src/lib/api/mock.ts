@@ -28,7 +28,6 @@ const getFileUploads = (): UploadResponse[] => {
   return uploads ? JSON.parse(uploads) : [];
 };
 
-
 mock.onPost('/api/register').reply(async (config) => {
 
   try {

@@ -1,6 +1,6 @@
 import AuthContext from '@/lib/context/authContext';
-import { FC, ReactNode, useContext } from 'react';
-import { Navigate } from 'react-router';
+import { FC, ReactNode, useContext, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 
 interface IProps {
   children: ReactNode;
@@ -8,13 +8,22 @@ interface IProps {
 
 const AuthGuard: FC<IProps> = ({ children }) => {
   const { user, isLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      const redirectTo = location.state?.from?.pathname || '/';
+      navigate(redirectTo, { replace: true });
+    }
+  }, [isLoading, user, navigate, location]);
 
   if (isLoading) {
-    return null;
+    return null
   }
 
   if (user) {
-    return <Navigate to={'/'} replace />;
+    return null;
   }
 
   return <div>{children}</div>;

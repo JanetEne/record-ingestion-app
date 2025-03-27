@@ -1,7 +1,8 @@
-import { createContext, ReactNode, useState, useEffect } from 'react'
+import { createContext, ReactNode, useState, useEffect, useContext } from 'react'
 import { UploadResponse } from '@/lib/interface/upload'
 import { Constants } from '@/utils/constants'
 import { SecureStorage } from '@/utils/storage';
+import AuthContext from './authContext';
 
 const secureStorage = new SecureStorage();
 
@@ -27,6 +28,8 @@ export function UploadsProviderContainer({ children }: { children: ReactNode }) 
   const [processingSteps, setProcessingSteps] = useState<string[]>([]);
   const [progress, setProgress] = useState(0)
 
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
     const storedUploads = secureStorage.getItem(Constants.uploads);
     if (storedUploads) {
@@ -38,6 +41,13 @@ export function UploadsProviderContainer({ children }: { children: ReactNode }) 
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setUploads([]);
+      secureStorage.removeItem(Constants.uploads);
+    }
+  }, [user]);
 
   const addUpload = (upload: UploadResponse) => {
     setUploads(prev => {
