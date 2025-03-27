@@ -6,7 +6,7 @@ export interface InputProps
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, onChange, fileName, ...props }, ref) => {
+  ({ className, onChange, fileName, ...props }) => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     return (
