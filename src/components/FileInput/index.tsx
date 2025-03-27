@@ -6,35 +6,37 @@ export interface InputProps
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, onChange, fileName, ...props }) => {
+  ({ className, onChange, fileName, ...props }, ref) => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     return (
-      <div>
-        <div className="flex items-center">
-          <div className="flex-1 flex justify-between items-center border border-gray-800 text-muted-foreground rounded-[4px] bg-transparent font-normal text-sm">
-            <span className="block truncate p-3.5">
-              {fileName || 'No file Selected'}
-            </span>
-            <button
-              type="button"
-              className="bg-gray-100 text-primary w-[40%] p-3.5 rounded-r-[4px] flex items-center justify-center cursor-pointer"
-              onClick={() => {
-                fileInputRef.current?.click();
-              }}
-            >
-              <p> Choose File</p>
-            </button>
-          </div>
-          <input
-            type="file"
-            className="hidden"
-            accept=".csv, .xlsx"
-            onChange={onChange}
-            ref={fileInputRef}
-            {...props}
-          />
+      <div className="w-full">
+        <div className="flex-1 flex justify-between items-center border border-gray-800 text-muted-foreground rounded-[4px] bg-transparent font-normal text-sm">
+          <span
+            className="block p-3.5 truncate flex-1 min-w-0"
+            title={fileName || 'No file selected'}
+          >
+            {fileName || 'No file selected'}
+          </span>
+          <button
+            type="button"
+            className="bg-gray-100 text-primary w-auto lg:w-[150px] p-3.5 rounded-r-[4px] flex items-center justify-center cursor-pointer"
+            onClick={() => {
+              fileInputRef.current?.click();
+            }}
+            aria-label="Choose a file to upload"
+          >
+            <p>Choose File</p>
+          </button>
         </div>
+        <input
+          type="file"
+          className="hidden"
+          accept=".csv, .xlsx"
+          onChange={onChange}
+          ref={fileInputRef}
+          {...props}
+        />
       </div>
     );
   }
