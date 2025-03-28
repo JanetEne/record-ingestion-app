@@ -20,7 +20,7 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
           </span>
           <button
             type="button"
-            className="bg-gray-100 text-primary w-auto lg:w-[150px] p-3.5 rounded-r-[4px] flex items-center justify-center cursor-pointer"
+            className="bg-gray-100 text-gray-800 w-auto lg:w-[150px] p-3.5 rounded-r-[4px] flex items-center justify-center cursor-pointer"
             onClick={() => {
               fileInputRef.current?.click();
             }}

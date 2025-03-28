@@ -1,7 +1,25 @@
 @import 'tailwindcss';
 
-:root {
+@theme {
+  --font-body: "Inter", "sans-serif";
+  --color-primary: #4f54f8;
+  --color-hover-color: #454ae7;
+  --color-secondary: #344054;
   --auth-bg-url: url('@/assets/images/credrails-bg.jpg');
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 500;
+  font-style: normal;
+  src: url("./assets/fonts/inter-medium.woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 600;
+  font-style: normal;
+  src: url("./assets/fonts/inter-semibold.woff");
 }
 
 .hide-scrollbar::-webkit-scrollbar {
