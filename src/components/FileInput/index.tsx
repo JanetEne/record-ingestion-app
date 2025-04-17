@@ -6,8 +6,17 @@ export interface InputProps
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, onChange, fileName, ...props }) => {
+  ({ className, onChange, fileName, ...props }, forwardedRef) => {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+    const handleRef = (instance: HTMLInputElement | null) => {
+      fileInputRef.current = instance;
+      if (typeof forwardedRef === 'function') {
+        forwardedRef(instance);
+      } else if (forwardedRef) {
+        (forwardedRef as React.RefObject<HTMLInputElement | null>).current = instance;
+      }
+    };
 
     return (
       <div className="w-full">
@@ -24,7 +33,7 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
             onClick={() => {
               fileInputRef.current?.click();
             }}
-            aria-label="Choose a file to upload"
+            aria-label="Choose file"
           >
             <p>Choose File</p>
           </button>
@@ -34,7 +43,7 @@ const FileInput = React.forwardRef<HTMLInputElement, InputProps>(
           className="hidden"
           accept=".csv, .xlsx"
           onChange={onChange}
-          ref={fileInputRef}
+          ref={handleRef}
           {...props}
         />
       </div>

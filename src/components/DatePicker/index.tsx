@@ -13,6 +13,7 @@ interface DatePickerProps<
   field: ControllerRenderProps<TFieldValues, TName> & { value: Date };
   className?: string;
   placeholder: string;
+  id: string
 }
 
 export function DatePicker<
@@ -22,6 +23,7 @@ export function DatePicker<
   field,
   className,
   placeholder,
+  id
 }: DatePickerProps<TFieldValues, TName>) {
   return (
     <Popover>
@@ -33,6 +35,7 @@ export function DatePicker<
             !field.value && 'text-muted-foreground',
             className
           )}
+          id={id}
         >
           {field.value ? format(field.value, 'PPP') : <span>{placeholder}</span>}
           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -44,6 +47,7 @@ export function DatePicker<
           selected={field.value}
           onSelect={field.onChange}
           initialFocus
+
         />
       </PopoverContent>
     </Popover>

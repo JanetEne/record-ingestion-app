@@ -35,7 +35,6 @@ const Pagination = ({
 
   const handlePageChange = (page: number) => {
     setPage(page);
-    setPage(page);
   };
 
   const getPageNumbers = () => {
@@ -89,7 +88,7 @@ const Pagination = ({
   };
 
   return (
-    <nav className="my-2 flex md:justify-center gap-8 md:gap-0 relative">
+    <div className="my-2 flex md:justify-center gap-8 md:gap-0 relative">
       <div className="relative md:absolute left-3 md:bottom-[.1rem] flex items-center gap-2">
         <p className="text-sm">Show:</p>
         <div
@@ -142,7 +141,7 @@ const Pagination = ({
           </Button>
         </li>
       </ul>
-    </nav>
+    </div>
   );
 };
 

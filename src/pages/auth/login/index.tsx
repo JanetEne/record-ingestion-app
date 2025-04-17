@@ -37,11 +37,11 @@ const Login = () => {
       if (response) {
         updateUser(response.data.data);
         toast.success(response.data.message);
-        navigate('/auth/login');
+        navigate('/');
       }
     } catch (error: any) {
       toast.error(
-        error?.response?.data?.error || 'Registration failed, Please try again'
+        error?.response?.data?.error || 'Invalid Credentials'
       );
     }
   };

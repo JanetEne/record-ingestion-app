@@ -135,14 +135,14 @@ const UploadFile = () => {
 
   return (
     <>
-      <p className="text-xl lg:text-2xl font-medium mb-6">Upload File</p>
+      <p className="text-xl lg:text-2xl font-medium mb-6">Upload Files</p>
       <div className="flex justify-center items-center flex-col">
         <Card className="max-w-2xl w-full">
           <FormProvider {...formMethods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid lg:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1 relative">
-                  <p>Start Date</p>
+                  <label htmlFor='startDate'>Start Date</label>
                   <Controller
                     name="startDate"
                     control={control}
@@ -150,6 +150,7 @@ const UploadFile = () => {
                       <DatePicker
                         field={field}
                         placeholder="Select start date"
+                        id='startDate'
                       />
                     )}
                   />
@@ -161,12 +162,13 @@ const UploadFile = () => {
                 </div>
 
                 <div className="flex flex-col gap-1 relative">
-                  <p>End Date</p>
+                  <label htmlFor='endDate'>End Date</label>
                   <Controller
                     name="endDate"
                     control={control}
                     render={({ field }) => (
-                      <DatePicker field={field} placeholder="Select end date" />
+                      <DatePicker field={field} placeholder="Select end date" id='endDate'
+                      />
                     )}
                   />
                   {errors.endDate && (
@@ -178,13 +180,13 @@ const UploadFile = () => {
               </div>
 
               <div className="flex flex-col gap-1 relative">
-                <p>Date Type</p>
+                <label htmlFor='dateType'>Date Type</label>
                 <Controller
                   name="dateType"
                   control={control}
                   render={({ field }) => (
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger id="dateType">
                         <SelectValue placeholder="Select Date Type" />
                       </SelectTrigger>
                       <SelectContent className="bg-white">
@@ -206,10 +208,10 @@ const UploadFile = () => {
               </div>
 
               <div className="flex flex-col gap-1 relative">
-                <p>
+                <label htmlFor='uploadFile'>
                   Upload File{' '}
                   <span className="text-xs">(CSV or XLSX, max 5mb)</span>
-                </p>
+                </label>
                 <Controller
                   name="file"
                   control={control}
@@ -217,6 +219,7 @@ const UploadFile = () => {
                     <FileInput
                       fileName={value?.name || ''}
                       onChange={(e) => onChange(e.target.files?.[0])}
+                      id="uploadFile"
                       {...field}
                     />
                   )}
@@ -237,11 +240,15 @@ const UploadFile = () => {
                     </p>
                   </div>
 
-                  <Progress value={progress} className="w-full" />
+                  <Progress value={progress} className="w-full" role='progressbar'/>
 
-                  <p className="text-xs text-muted-foreground">
-                    Cleaning up data and processing records...
-                  </p>
+                  <div className="space-y-2 mt-2">
+                    {processingSteps.map((step, i) => (
+                      <p key={i} className="text-sm text-gray-600 flex items-start">
+                        <span>{step}</span>
+                      </p>
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -249,6 +256,7 @@ const UploadFile = () => {
                 className="w-full mt-2"
                 type="submit"
                 disabled={isSubmitting || isProcessing}
+                aria-label='Upload'
               >
                 {(isSubmitting || isProcessing) && (
                   <Loader2 className={cn('h-4 w-4 animate-spin mr-2')} />
@@ -256,8 +264,8 @@ const UploadFile = () => {
                 {isProcessing
                   ? 'Processing...'
                   : isSubmitting
-                  ? 'Uploading...'
-                  : 'Upload'}
+                    ? 'Uploading...'
+                    : 'Upload'}
               </Button>
             </form>
           </FormProvider>
