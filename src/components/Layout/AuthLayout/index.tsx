@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router';
-import CredrailsLogoWhite from '@/assets/images/credrails-logo-white.png';
+import IngestionLogo from '@/assets/images/ingestion-icon.png';
 
 const AuthLayout = () => {
   return (
@@ -12,12 +12,24 @@ const AuthLayout = () => {
       <div className="bg-[image:var(--auth-bg-url)] bg-cover bg-center relative hidden md:flex justify-center 2xl:justify-start items-center px-16 2xl:pl-40">
         <div className="absolute inset-0 bg-[#4f54f8]/90"></div>
         <div className="relative max-w-[400px] z-10">
-          <img src={CredrailsLogoWhite} alt="credrails-logo-white" />
+          <div className="flex gap-2 items-center">
+            <img
+              src={IngestionLogo}
+              alt="record-ingestion-logo"
+              className="w-10 h-10"
+            />
+            <p className="text-white font-bold text-2xl">
+              Record Ingestion App
+            </p>
+          </div>
+
           <h1 className="text-xl lg:text-4xl font-semibold text-white mt-20">
             Simplify Your Workflow!
           </h1>
           <p className="mt-4 text-white/80">
-            Simplify your workflow with seamless file uploads, flexible date range selections, secure storage, real-time progress tracking, and more.
+            Simplify your workflow with seamless file uploads, flexible date
+            range selections, secure storage, real-time progress tracking, and
+            more.
           </p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import CredrailsLogo from '@/assets/images/credrails-logo.png';
+import IngestionLogo from '@/assets/images/ingestion-icon.png';
 import { NavLink, useNavigate } from 'react-router';
 import Container from '../Container';
 import { Button } from '../Button';
@@ -20,7 +20,14 @@ const NavBar = () => {
       <Container>
         <div className="w-full flex justify-between items-center">
           <NavLink to="/">
-            <img src={CredrailsLogo} alt="credrails-logo" />
+            <div className="flex gap-2 items-center">
+              <img
+                src={IngestionLogo}
+                alt="record-ingestion-logo"
+                className="w-10 h-10"
+              />
+              <p className="font-bold text-2xl">Record Ingestion App</p>
+            </div>
           </NavLink>
           <div className="flex lg:gap-4">
             <NavLink to="/uploads">
